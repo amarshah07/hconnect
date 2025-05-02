@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HConnect Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #f0f2f5;
+    }
+
+    .navbar {
+      background-color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #ddd;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar-left img {
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .navbar-left span {
+      font-size: 22px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .navbar-center {
+      display: flex;
+      gap: 30px;
+    }
+
+    .navbar-center a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+
+    .navbar-center a:hover {
+      color: #4a148c;
+    }
+
+    .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+    }
+
+    .navbar-right span {
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .profile-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .profile-dropdown img {
+      height: 36px;
+      width: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: white;
+      min-width: 140px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+      border-radius: 6px;
+      z-index: 1001;
+      overflow: hidden;
+    }
+
+    .dropdown-menu a {
+      display: block;
+      padding: 10px;
+      color: #333;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .dropdown-menu a:hover {
+      background-color: #f0f0f0;
+    }
+
+    .main-container {
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section {
+      background-color: #fff;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .section h2 {
+      margin-bottom: 10px;
+      color: #4a148c;
+    }
+
+    .complaint-creator {
+      margin-bottom: 10px;
+    }
+
+    .complaint-creator input, .complaint-creator textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-top: 5px;
+    }
+
+    .complaint-creator button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      border: none;
+      background-color: #4a148c;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .complaint {
+      background-color: #f9f9f9;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .complaint p {
+      margin: 0;
+    }
+
+    @media (max-width: 768px) {
+      .navbar-center {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <div class="navbar">
+    <div class="navbar-left">
+      <img src="hlogo.png" alt="HConnect Logo" />
+      <span>HConnect</span>
+    </div>
+    <div class="navbar-center">
+      <a href="dashboard.html">Home</a>
+      <a href="complaints.html">Complaints</a>
+      <a href="lostfound.html">Lost & Found</a>
+      <a href="hygiene.html">Hygiene</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <div class="navbar-right">
+      <span id="username">User</span>
+      <div class="profile-dropdown">
+        <img id="profilePic" src="" alt="Profile" onclick="toggleDropdown()" />
+        <div class="dropdown-menu" id="dropdownMenu">
+          <a href="profile.html">View Profile</a>
+          <a href="settings.html">Settings</a>
+          <a href="#" onclick="signOut()">Sign Out</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-container">
+
+    <!-- Updates Section -->
+    <div class="section" id="updates">
+      <h2>Updates from Management</h2>
+      <div class="post">
+        <p><strong>Maintenance:</strong> Water supply will be off from 10AM–12PM today.</p>
+      </div>
+      <div class="post">
+        <p><strong>Notice:</strong> Hostel gate closes at 10PM sharp. Late entry not allowed.</p>
+      </div>
+    </div>
+
+    <!-- Complaints Section -->
+    <div class="section" id="complaints">
+      <h2>Raise a Complaint</h2>
+      <div class="complaint-creator">
+        <label for="complaintTitle">Title:</label>
+        <input type="text" id="complaintTitle" placeholder="Enter complaint title" />
+        <label for="complaintDescription">Description:</label>
+        <textarea id="complaintDescription" rows="4" placeholder="Describe your complaint here..."></textarea>
+        <button onclick="submitComplaint()">Submit Complaint</button>
+      </div>
+
+      <div id="complaintsList">
+        <!-- Existing complaints will be listed here -->
+      </div>
+    </div>
+
+    <!-- Events Section -->
+    <div class="section" id="events">
+      <h2>Hostel Events</h2>
+      <div class="event-creator">
+        <label for="eventInput">Create an event:</label>
+        <input type="text" id="eventInput" placeholder="E.g. Movie Night at 8PM 🎬" />
+        <button onclick="addEvent()">Post Event</button>
+      </div>
+      <div id="eventList">
+        <div class="post"><p><strong>Quiz Night:</strong> Thursday 7PM in common hall.</p></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Firebase Auth + JS -->
+  <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-auth-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCAgdzfUF7cfktDdjf-8T8UgmK5p_4Ol9I",
+      authDomain: "hconnect-41c7c.firebaseapp.com",
+      projectId: "hconnect-41c7c",
+      storageBucket: "hconnect-41c7c.appspot.com",
+      messagingSenderId: "927970333668",
+      appId: "1:927970333668:web:541f523bea1a7f9549adf1"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        document.getElementById('username').textContent = user.displayName || "User";
+        document.getElementById('profilePic').src = user.photoURL || "default.jpg";
+      } else {
+        window.location.href = "index.html";
+      }
+    });
+
+    function addEvent() {
+      const input = document.getElementById('eventInput');
+      const value = input.value.trim();
+      if (value) {
+        const eventList = document.getElementById('eventList');
+        const newPost = document.createElement('div');
+        newPost.className = 'post';
+        newPost.innerHTML = `<p><strong>New Event:</strong> ${value}</p>`;
+        eventList.prepend(newPost);
+        input.value = '';
+      }
+    }
+
+    function submitComplaint() {
+      const title = document.getElementById('complaintTitle').value.trim();
+      const description = document.getElementById('complaintDescription').value.trim();
+      if (title && description) {
+        const complaintList = document.getElementById('complaintsList');
+        const newComplaint = document.createElement('div');
+        newComplaint.className = 'complaint';
+        newComplaint.innerHTML = `<p><strong>Complaint Title:</strong> ${title}</p><p><strong>Description:</strong> ${description}</p>`;
+        complaintList.prepend(newComplaint);
+        document.getElementById('complaintTitle').value = '';
+        document.getElementById('complaintDescription').value = '';
+      }
+    }
+
+    function toggleDropdown() {
+      const menu = document.getElementById('dropdownMenu');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    window.onclick = function(event) {
+      if (!event.target.matches('#profilePic')) {
+        const dropdown = document.getElementById('dropdownMenu');
+        if (dropdown && dropdown.style.display === 'block') {
+          dropdown.style.display = 'none';
+        }
+      }
+    }
+
+    function signOut() {
+      firebase.auth().signOut().then(() => {
+        window.location.href = "index.html";
+      }).catch((error) => {
+        alert("Error signing out: " + error.message);
+      });
+    }
+  </script>
+</body>
+</html>
